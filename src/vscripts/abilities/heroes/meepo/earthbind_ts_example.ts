@@ -9,7 +9,7 @@ export class meepo_earthbind_ts_example extends BaseAbility {
         if (IsServer()) {
             const talent = this.GetCaster().FindAbilityByName("special_bonus_unique_meepo_3");
             if (talent) {
-                cooldown -= talent.GetSpecialValueFor("value");
+                cooldown -= talent.GetSpecialValueFor("value");                
             }
         }
 

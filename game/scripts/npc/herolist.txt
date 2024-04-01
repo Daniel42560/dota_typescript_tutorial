@@ -1,0 +1,9 @@
+"CustomHeroList"
+{
+   "npc_dota_hero_wisp"            "1" // unlimited
+   "npc_dota_hero_pudge"           "1" // enabled
+   "npc_dota_hero_templar_assassin2"        "1" //  enabled
+   "npc_dota_hero_dragon_knight"   "1" // 0 für disable
+   "npc_dota_hero_templar_assassin" "1"
+   "npc_dota_hero_undying"          "1"
+}

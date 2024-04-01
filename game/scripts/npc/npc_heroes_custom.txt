@@ -1,0 +1,5 @@
+#base heroes/undying/hero.kv
+
+"DOTAHeroes"
+{
+}
