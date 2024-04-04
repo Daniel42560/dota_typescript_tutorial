@@ -1,9 +1,11 @@
 import { reloadable } from "./lib/tstl-utils";
 import { modifier_panic } from "./modifiers/modifier_panic";
+import { untargetable_modifier } from "./modifiers/untargetable_modifier";
+import { zombie_modifier } from "./modifiers/zombie_modifier";
 
 const heroSelectionTime = 20;
 
-//- next up: Events für on attack oder so nacgucken und undying in 5 hits sterben lassen
+//- next up: GUcken wie ich PlayerID bekomme um Kamera zu setzen
 
 declare global {
     interface CDOTAGameRules {
@@ -94,11 +96,15 @@ export class GameMode {
     private StartGame(): void {
         print("Game starting!");
 
+        this.Setup();
+        this.SpawnEnemyInRow("npc_dota_hero_undying", 1);
+    }
+    private Setup(): void{
         const gm: CDOTABaseGameMode = GameRules.GetGameModeEntity();
+
         gm.SetCustomAttributeDerivedStatValue(AttributeDerivedStats.STRENGTH_HP_REGEN, 0);
         gm.SetFogOfWarDisabled(true);
-
-        this.SpawnEnemyInRow("npc_dota_hero_undying", 1);
+        this.SetupCamera();
     }
     // Called on script_reload
     public Reload() {
@@ -111,13 +117,14 @@ export class GameMode {
         const unit = EntIndexToHScript(event.entindex) as CDOTA_BaseNPC; // Cast to npc since this is the 'npc_spawned' event
         // Give all real heroes (not illusions) the meepo_earthbind_ts_example spell
         if (unit.IsRealHero()) {
-            if(unit.GetTeam() === DotaTeam.BADGUYS){
+            if(unit.GetTeam() === DotaTeam.NEUTRALS){
                 //this.GetInitialTargetForEntity(unit);
+                unit.AddNewModifier(unit, undefined, zombie_modifier.name, undefined);                             
             }
         }
     }
     private OnNpcKilled(event: EntityKilledEvent){
-
+        
     }
     private SpawnEnemyInRow(entity : string, row : number){
         const spawn_vector_ent = Entities.FindByName(undefined, "target_row_1_right") as CBaseEntity;
@@ -132,8 +139,12 @@ export class GameMode {
         
         Timers.CreateTimer(3, () => {
             spawnedUnit.MoveToPositionAggressive(aggro_pos);
+            //spawnedUnit.AddNewModifier(spawnedUnit, undefined, hitcount_modifier.name, undefined);
         })
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
     private GetInitialTargetForEntity(unit : CDOTA_BaseNPC){
         const row = this.GetEntityRow(unit);
         
@@ -144,5 +155,20 @@ export class GameMode {
     }
     private GetEntityRow(unit : CDOTA_BaseNPC) : number{
         return 0;
+    }
+    private SetupCamera(): void{
+        
+        const gm: CDOTABaseGameMode = GameRules.GetGameModeEntity();
+        gm.SetCameraDistanceOverride(2000);
+
+        const camera_pos = Entities.FindByName(undefined, "target_camera") as CBaseEntity; 
+        const dummy = CreateUnitByName("npc_dota_dummy_caster", camera_pos.GetAbsOrigin(), true, undefined, undefined, DotaTeam.NEUTRALS); 
+        dummy.AddNoDraw(); 
+        dummy.AddNewModifier(dummy, undefined, untargetable_modifier.name, undefined);     
+        for (let i = 0; i < DOTA_MAX_PLAYERS - 1; i++){
+            if (PlayerResource.IsValidPlayer(i)){
+            PlayerResource.SetCameraTarget(i, dummy);                        
+            }
+        }        
     }
 }
