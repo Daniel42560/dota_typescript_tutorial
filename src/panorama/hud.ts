@@ -1,4 +1,5 @@
 $.Msg("Hud panorama loaded");
+//GameUI.SetCameraDistance(600);
 
 function OnCloseButtonClicked() {
     $.Msg("Example close button clicked");
@@ -11,6 +12,7 @@ function OnCloseButtonClicked() {
 
     // Send event to server
     GameEvents.SendCustomGameEventToServer("ui_panel_closed", {});
+    
 }
 
 GameEvents.Subscribe("example_event", (data: NetworkedData<ExampleEventData>) => {

@@ -24,7 +24,7 @@ export class zombie_modifier extends BaseModifier{
         //this.SetStackCount(0);
         this.GetParent().ForceKill(false);
     }
-    CheckState() {
+    CheckState() { 
         return {[ModifierState.NO_HEALTH_BAR]: true}
     }
 

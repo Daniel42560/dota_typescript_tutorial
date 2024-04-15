@@ -1,0 +1,16 @@
+<root>
+    <styles>
+        <include src="file://{resources}/styles/custom_game/camera.css" /> 
+    </styles>
+
+    <scripts>
+        <include src="file://{resources}/scripts/custom_game/camera.js" /> 
+    </scripts>
+
+    <snippets>
+    </snippets>
+
+    <Panel>
+    </Panel>
+
+</root>

@@ -1,4 +1,5 @@
 #base heroes/undying/hero.kv
+#base heroes/drow_ranger/drow_ranger.kv
 
 "DOTAHeroes"
 {
